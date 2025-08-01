@@ -27,9 +27,17 @@ class Buku extends Controller
             $data['buku'] = $this->buku->findAll();
         }
 
+        // Hitung statistik buku
+        $buku = $data['buku'];
+        $data['total_buku'] = count($buku);
+        $data['buku_tersedia'] = count(array_filter($buku, fn($b) => $b['ketersediaan'] == 1));
+        $data['buku_tidak_tersedia'] = $data['total_buku'] - $data['buku_tersedia'];
+
         $data['keyword'] = $keyword;
+
         return view('buku/index', $data);
     }
+
 
 
     public function create()

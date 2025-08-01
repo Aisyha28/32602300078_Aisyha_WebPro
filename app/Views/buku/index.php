@@ -1,104 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
+<?= $this->extend('layout/template') ?>
 
-<head>
-    <meta charset="UTF-8">
-    <title>Daftar Buku</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 30px;
-            background: #f9f9f9;
-        }
+<?= $this->section('content') ?>
+<h2 class="mb-4 text-center bi bi-book-half ">Daftar Buku</h2>
 
-        h1 {
-            margin-bottom: 20px;
-        }
-
-        form.search-form {
-            margin-bottom: 15px;
-        }
-
-        input[type="text"] {
-            padding: 6px;
-            width: 200px;
-            margin-right: 8px;
-        }
-
-        a.button {
-            display: inline-block;
-            padding: 8px 16px;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 4px;
-            margin-bottom: 15px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #fff;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-        }
-
-        th,
-        td {
-            padding: 12px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f0f0f0;
-        }
-
-        tr:nth-child(even) {
-            background-color: #fafafa;
-        }
-
-        .flash-message {
-            background-color: #d4edda;
-            color: #155724;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #c3e6cb;
-            border-radius: 4px;
-        }
-
-        .action-links a {
-            margin-right: 10px;
-            color: #007bff;
-            text-decoration: none;
-        }
-
-        .action-links a:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-
-<body>
-
-    <h1>Daftar Buku</h1>
-
-    <?php if (session()->getFlashdata('success')): ?>
-        <div class="flash-message">
-            <?= session()->getFlashdata('success') ?>
+<!-- Statistik Buku -->
+<div class="row mb-4">
+    <div class="col-md-4 mb-2">
+        <div class="card text-white bg-primary shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title" style="font-size:14px; font-weight:500; opacity:0.9;">Total Buku</h6>
+                <h4 class="card-text" style="font-size:24px; font-weight:600;"><?= $total_buku ?></h4>
+            </div>
         </div>
-    <?php endif ?>
+    </div>
+    <div class="col-md-4 mb-2">
+        <div class="card text-white bg-success shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title" style="font-size:14px; font-weight:500; opacity:0.9;">Buku Tersedia</h6>
+                <h4 class="card-text" style="font-size:24px; font-weight:600;"><?= $buku_tersedia ?></h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-2">
+        <div class="card text-white bg-danger shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title" style="font-size:14px; font-weight:500; opacity:0.9;">Tidak Tersedia</h6>
+                <h4 class="card-text" style="font-size:24px; font-weight:600;"><?= $buku_tidak_tersedia ?></h4>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <!-- Form pencarian -->
-    <form method="get" action="/buku" class="search-form">
-        <input type="text" name="q" value="<?= esc($keyword ?? '') ?>" placeholder="Cari judul atau kode...">
-        <button type="submit">Cari</button>
-        <a href="/buku">Reset</a>
-    </form>
+<!-- Flash Success -->
+<?php if (session()->getFlashdata('success')): ?>
+    <div class="alert alert-success">
+        <?= session()->getFlashdata('success') ?>
+    </div>
+<?php endif ?>
 
-    <a href="/buku/create" class="button">+ Tambah Buku</a>
+<!-- Form Pencarian -->
+<form method="get" action="/buku" class="row g-2 align-items-center mb-3">
+    <div class="col-auto">
+        <input type="text" name="q" value="<?= esc($keyword ?? '') ?>" class="form-control" placeholder="Cari judul atau kode..." style="min-width:220px;">
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary">Cari</button>
+    </div>
+    <div class="col-auto">
+        <a href="/buku" class="btn btn-link text-decoration-none">Reset</a>
+    </div>
+</form>
 
-    <table>
-        <thead>
+<!-- Tombol Tambah -->
+<div class="mb-3">
+    <a href="/buku/create" class="btn btn-success">+ Tambah Buku</a>
+</div>
+
+<!-- Tabel Buku -->
+<div class="table-responsive">
+    <table class="table table-bordered table-striped bg-white shadow-sm">
+        <thead class="table-light">
             <tr>
                 <th>Kode</th>
                 <th>Judul</th>
@@ -110,21 +71,23 @@
         </thead>
         <tbody>
             <?php foreach ($buku as $b): ?>
-                <tr>
+                <tr style="transition: background-color 0.2s ease-in-out;" onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor=''">
                     <td><?= esc($b['kode_buku']) ?></td>
                     <td><?= esc($b['judul']) ?></td>
                     <td><?= esc($b['penulis']) ?></td>
                     <td><?= esc($b['tahun_terbit']) ?></td>
-                    <td><?= $b['ketersediaan'] ? 'Tersedia' : 'Tidak tersedia' ?></td>
-                    <td class="action-links">
-                        <a href="/buku/edit/<?= $b['id'] ?>">Edit</a>
-                        <a href="/buku/delete/<?= $b['id'] ?>" onclick="return confirm('Yakin ingin menghapus?')">Hapus</a>
+                    <td>
+                        <span class="badge <?= $b['ketersediaan'] ? 'bg-success' : 'bg-danger' ?>">
+                            <?= $b['ketersediaan'] ? 'Tersedia' : 'Tidak tersedia' ?>
+                        </span>
+                    </td>
+                    <td>
+                        <a href="/buku/edit/<?= $b['id'] ?>" class="btn btn-sm btn-warning me-1">Edit</a>
+                        <a href="/buku/delete/<?= $b['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus?')">Hapus</a>
                     </td>
                 </tr>
             <?php endforeach ?>
         </tbody>
     </table>
-
-</body>
-
-</html>
+</div>
+<?= $this->endSection() ?>
