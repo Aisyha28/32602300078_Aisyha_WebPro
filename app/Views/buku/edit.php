@@ -4,106 +4,140 @@
 <head>
     <meta charset="UTF-8">
     <title>Edit Buku</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            padding: 30px;
-            background: #f9f9f9;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #f1f4f9, #dff1ff);
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
         }
 
         h2 {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            color: #333;
+            font-weight: 600;
+            text-align: center;
         }
 
         form {
-            background: #fff;
-            padding: 25px;
-            border-radius: 6px;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
             max-width: 500px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-        }
-
-        p {
-            margin-bottom: 15px;
+            width: 100%;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
         }
 
         label {
             display: block;
-            margin-bottom: 6px;
-            font-weight: bold;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
         }
 
         input[type="text"],
         input[type="number"],
         select {
             width: 100%;
-            padding: 8px;
+            padding: 10px 12px;
+            margin-bottom: 20px;
             border: 1px solid #ccc;
-            border-radius: 4px;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s ease-in-out;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #007bff;
+            outline: none;
         }
 
         button {
             background-color: #007bff;
             color: white;
-            padding: 10px 18px;
+            padding: 12px 20px;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
             cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #0056b3;
         }
 
         .error-list {
-            background-color: #f8d7da;
-            color: #721c24;
+            background-color: #ffe5e5;
+            color: #a30000;
             border: 1px solid #f5c6cb;
-            padding: 10px;
+            padding: 12px 16px;
             margin-bottom: 20px;
-            border-radius: 4px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .error-list ul {
+            padding-left: 18px;
+            margin: 0;
+        }
+
+        .form-title {
+            margin-bottom: 30px;
         }
     </style>
 </head>
 
 <body>
 
-    <h2>Edit Buku</h2>
-
-    <?php if (session()->getFlashdata('errors')): ?>
-        <div class="error-list">
-            <ul>
-                <?php foreach (session()->getFlashdata('errors') as $error): ?>
-                    <li><?= esc($error) ?></li>
-                <?php endforeach ?>
-            </ul>
-        </div>
-    <?php endif ?>
-
     <form action="/buku/update/<?= $buku['id'] ?>" method="post">
-        <p>
-            <label for="kode_buku">Kode Buku:</label>
-            <input type="text" name="kode_buku" id="kode_buku" value="<?= old('kode_buku', $buku['kode_buku']) ?>" required>
-        </p>
-        <p>
-            <label for="judul">Judul:</label>
-            <input type="text" name="judul" id="judul" value="<?= old('judul', $buku['judul']) ?>" required>
-        </p>
-        <p>
-            <label for="penulis">Penulis:</label>
-            <input type="text" name="penulis" id="penulis" value="<?= old('penulis', $buku['penulis']) ?>" required>
-        </p>
-        <p>
-            <label for="penerbit">Penerbit:</label>
-            <input type="text" name="penerbit" id="penerbit" value="<?= old('penerbit', $buku['penerbit']) ?>" required>
-        </p>
-        <p>
-            <label for="tahun_terbit">Tahun Terbit:</label>
-            <input type="number" name="tahun_terbit" id="tahun_terbit" value="<?= old('tahun_terbit', $buku['tahun_terbit']) ?>" required>
-        </p>
-        <p>
-            <label for="ketersediaan">Ketersediaan:</label>
-            <select name="ketersediaan" id="ketersediaan">
-                <option value="1" <?= old('ketersediaan', $buku['ketersediaan']) == '1' ? 'selected' : '' ?>>Tersedia</option>
-                <option value="0" <?= old('ketersediaan', $buku['ketersediaan']) == '0' ? 'selected' : '' ?>>Tidak Tersedia</option>
-            </select>
-        </p>
+        <h2 class="form-title">Edit Buku</h2>
+
+        <?php if (session()->getFlashdata('errors')): ?>
+            <div class="error-list">
+                <ul>
+                    <?php foreach (session()->getFlashdata('errors') as $error): ?>
+                        <li><?= esc($error) ?></li>
+                    <?php endforeach ?>
+                </ul>
+            </div>
+        <?php endif ?>
+
+        <label for="kode_buku">Kode Buku</label>
+        <input type="text" name="kode_buku" id="kode_buku" value="<?= old('kode_buku', $buku['kode_buku']) ?>" required>
+
+        <label for="judul">Judul</label>
+        <input type="text" name="judul" id="judul" value="<?= old('judul', $buku['judul']) ?>" required>
+
+        <label for="penulis">Penulis</label>
+        <input type="text" name="penulis" id="penulis" value="<?= old('penulis', $buku['penulis']) ?>" required>
+
+        <label for="penerbit">Penerbit</label>
+        <input type="text" name="penerbit" id="penerbit" value="<?= old('penerbit', $buku['penerbit']) ?>" required>
+
+        <label for="tahun_terbit">Tahun Terbit</label>
+        <input type="number" name="tahun_terbit" id="tahun_terbit"
+            value="<?= old('tahun_terbit', $buku['tahun_terbit']) ?>" required>
+
+        <label for="ketersediaan">Ketersediaan</label>
+        <select name="ketersediaan" id="ketersediaan">
+            <option value="1" <?= old('ketersediaan', $buku['ketersediaan']) == '1' ? 'selected' : '' ?>>Tersedia</option>
+            <option value="0" <?= old('ketersediaan', $buku['ketersediaan']) == '0' ? 'selected' : '' ?>>Tidak Tersedia
+            </option>
+        </select>
+
         <button type="submit">Update</button>
     </form>
 
